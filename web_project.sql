@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 11, 2025 at 10:20 AM
+-- Generation Time: May 12, 2025 at 05:17 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `administrator` (
   `adminID` int(10) NOT NULL,
+  `userID` varchar(10) NOT NULL,
   `staffID` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -40,6 +41,7 @@ CREATE TABLE `administrator` (
 
 CREATE TABLE `advisor` (
   `advisorID` int(10) NOT NULL,
+  `userID` varchar(10) NOT NULL,
   `staffID` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -50,9 +52,9 @@ CREATE TABLE `advisor` (
 --
 
 CREATE TABLE `attendancelist` (
-  `listID` int(10) NOT NULL,
-  `slotID` int(10) NOT NULL,
-  `studentID` int(10) NOT NULL,
+  `listID` varchar(10) NOT NULL,
+  `slotID` varchar(10) NOT NULL,
+  `studentID` varchar(10) NOT NULL,
   `checkInTime` time(6) NOT NULL,
   `geolocation` varchar(10) NOT NULL,
   `status` tinyint(1) NOT NULL
@@ -65,8 +67,8 @@ CREATE TABLE `attendancelist` (
 --
 
 CREATE TABLE `attendanceslot` (
-  `slotID` int(10) NOT NULL,
-  `eventID` int(10) NOT NULL,
+  `slotID` varchar(10) NOT NULL,
+  `eventID` varchar(10) NOT NULL,
   `advisorID` int(10) NOT NULL,
   `slotTime` time(6) NOT NULL,
   `QRCode` varchar(20) NOT NULL
@@ -79,11 +81,11 @@ CREATE TABLE `attendanceslot` (
 --
 
 CREATE TABLE `event` (
-  `eventID` int(11) NOT NULL,
+  `eventID` varchar(10) NOT NULL,
   `eventName` varchar(100) NOT NULL,
   `Description` varchar(200) NOT NULL,
   `eventDate` date NOT NULL,
-  `eventLocation` varchar(100) NOT NULL,
+  `eventLocation` int(100) NOT NULL,
   `eventStatus` varchar(100) NOT NULL,
   `approvalLetter` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -95,9 +97,9 @@ CREATE TABLE `event` (
 --
 
 CREATE TABLE `eventcommittee` (
-  `committeeID` int(7) NOT NULL,
+  `committeeID` varchar(7) NOT NULL,
   `advisorID` int(10) NOT NULL,
-  `eventID` int(10) NOT NULL,
+  `eventID` varchar(10) NOT NULL,
   `committeePosition` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -109,7 +111,7 @@ CREATE TABLE `eventcommittee` (
 
 CREATE TABLE `membership` (
   `membershipID` int(10) NOT NULL,
-  `studentID` int(7) NOT NULL,
+  `studentID` varchar(7) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `appliedDate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -121,8 +123,8 @@ CREATE TABLE `membership` (
 --
 
 CREATE TABLE `meritclaim` (
-  `claimID` int(10) NOT NULL,
-  `eventID` int(10) NOT NULL,
+  `claimID` varchar(10) NOT NULL,
+  `eventID` varchar(10) NOT NULL,
   `role` varchar(10) NOT NULL,
   `status` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -135,6 +137,7 @@ CREATE TABLE `meritclaim` (
 
 CREATE TABLE `staff` (
   `staffID` int(10) NOT NULL,
+  `userID` varchar(10) NOT NULL,
   `staffName` varchar(100) NOT NULL,
   `staffEmail` varchar(100) NOT NULL,
   `role` varchar(20) NOT NULL
@@ -147,12 +150,26 @@ CREATE TABLE `staff` (
 --
 
 CREATE TABLE `student` (
-  `studentID` int(7) NOT NULL,
+  `studentID` varchar(7) NOT NULL,
   `studentName` varchar(100) NOT NULL,
   `studentEmail` varchar(100) NOT NULL,
   `studentCard` varchar(200) NOT NULL,
   `studentPhoneNum` varchar(15) NOT NULL,
-  `password` varchar(30) NOT NULL
+  `password` varchar(30) NOT NULL,
+  `userID` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `userID` varchar(10) NOT NULL,
+  `userName` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `userType` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -164,6 +181,7 @@ CREATE TABLE `student` (
 --
 ALTER TABLE `administrator`
   ADD PRIMARY KEY (`adminID`),
+  ADD KEY `userID` (`userID`),
   ADD KEY `staffID` (`staffID`);
 
 --
@@ -171,7 +189,8 @@ ALTER TABLE `administrator`
 --
 ALTER TABLE `advisor`
   ADD PRIMARY KEY (`advisorID`),
-  ADD KEY `staffID` (`staffID`);
+  ADD KEY `staffID` (`staffID`),
+  ADD KEY `userID` (`userID`);
 
 --
 -- Indexes for table `attendancelist`
@@ -208,7 +227,7 @@ ALTER TABLE `eventcommittee`
 --
 ALTER TABLE `membership`
   ADD PRIMARY KEY (`membershipID`),
-  ADD KEY `membership_ibfk_1` (`studentID`);
+  ADD KEY `studentID` (`studentID`);
 
 --
 -- Indexes for table `meritclaim`
@@ -221,77 +240,21 @@ ALTER TABLE `meritclaim`
 -- Indexes for table `staff`
 --
 ALTER TABLE `staff`
-  ADD PRIMARY KEY (`staffID`);
+  ADD PRIMARY KEY (`staffID`),
+  ADD KEY `userID` (`userID`);
 
 --
 -- Indexes for table `student`
 --
 ALTER TABLE `student`
-  ADD PRIMARY KEY (`studentID`);
+  ADD PRIMARY KEY (`studentID`),
+  ADD KEY `userID` (`userID`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- Indexes for table `user`
 --
-
---
--- AUTO_INCREMENT for table `administrator`
---
-ALTER TABLE `administrator`
-  MODIFY `adminID` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `advisor`
---
-ALTER TABLE `advisor`
-  MODIFY `advisorID` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `attendancelist`
---
-ALTER TABLE `attendancelist`
-  MODIFY `listID` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `attendanceslot`
---
-ALTER TABLE `attendanceslot`
-  MODIFY `slotID` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `event`
---
-ALTER TABLE `event`
-  MODIFY `eventID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `eventcommittee`
---
-ALTER TABLE `eventcommittee`
-  MODIFY `committeeID` int(7) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `membership`
---
-ALTER TABLE `membership`
-  MODIFY `membershipID` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `meritclaim`
---
-ALTER TABLE `meritclaim`
-  MODIFY `claimID` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `staff`
---
-ALTER TABLE `staff`
-  MODIFY `staffID` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `student`
---
-ALTER TABLE `student`
-  MODIFY `studentID` int(7) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`userID`);
 
 --
 -- Constraints for dumped tables
@@ -301,13 +264,15 @@ ALTER TABLE `student`
 -- Constraints for table `administrator`
 --
 ALTER TABLE `administrator`
-  ADD CONSTRAINT `administrator_ibfk_1` FOREIGN KEY (`staffID`) REFERENCES `staff` (`staffID`);
+  ADD CONSTRAINT `administrator_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`),
+  ADD CONSTRAINT `administrator_ibfk_2` FOREIGN KEY (`staffID`) REFERENCES `staff` (`staffID`);
 
 --
 -- Constraints for table `advisor`
 --
 ALTER TABLE `advisor`
-  ADD CONSTRAINT `advisor_ibfk_1` FOREIGN KEY (`staffID`) REFERENCES `staff` (`staffID`);
+  ADD CONSTRAINT `advisor_ibfk_1` FOREIGN KEY (`staffID`) REFERENCES `staff` (`staffID`),
+  ADD CONSTRAINT `advisor_ibfk_2` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`);
 
 --
 -- Constraints for table `attendancelist`
@@ -334,13 +299,25 @@ ALTER TABLE `eventcommittee`
 -- Constraints for table `membership`
 --
 ALTER TABLE `membership`
-  ADD CONSTRAINT `membership_ibfk_1` FOREIGN KEY (`studentID`) REFERENCES `membership` (`membershipID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `membership_ibfk_1` FOREIGN KEY (`studentID`) REFERENCES `student` (`studentID`);
 
 --
 -- Constraints for table `meritclaim`
 --
 ALTER TABLE `meritclaim`
   ADD CONSTRAINT `meritclaim_ibfk_1` FOREIGN KEY (`eventID`) REFERENCES `event` (`eventID`);
+
+--
+-- Constraints for table `staff`
+--
+ALTER TABLE `staff`
+  ADD CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`);
+
+--
+-- Constraints for table `student`
+--
+ALTER TABLE `student`
+  ADD CONSTRAINT `student_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
