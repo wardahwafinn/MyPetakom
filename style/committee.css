@@ -1,0 +1,665 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-image: url("../images/bg.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.background {
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 210px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+.logo {
+    display: block;
+    width: 125px;
+    height: 125px;
+    margin: 0 auto 15px;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-color: white;
+    margin: 10px 0;
+}
+
+.nav-item {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    padding: 10px 80px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.event-title {
+    color: #333;
+    padding: 10px 80px;
+    display: block;
+}
+
+.submenu a {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    padding: 8px 55px 7px 55px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.submenu a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.top-right-bar {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 15px;
+    z-index: 1000;
+    width: auto;
+}
+
+.profilename {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border: 2px solid #4a4a4a;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #4a4a4a;
+    font-weight: bold;
+    font-family: sans-serif;
+    background-color: transparent;
+    transition: background-color 0.2s;
+}
+
+.profile-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.logout-icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.main-content {
+    margin-left: 230px;
+    margin-right: 20px;
+    padding: 20px;
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+.main-content h1 {
+    color: #333;
+    font-size: 32px;
+    margin-bottom: 30px;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.committee-form {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.form-section {
+    margin-bottom: 40px;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 30px;
+}
+
+.form-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.form-section h2 {
+    color: #495057;
+    font-size: 20px;
+    margin-bottom: 20px;
+    border-left: 4px solid #a90000;
+    padding-left: 15px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #495057;
+    font-size: 14px;
+}
+
+.form-group input[type="text"],
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #a90000;
+    box-shadow: 0 0 0 3px rgba(169, 0, 0, 0.1);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid #e9ecef;
+}
+
+.cancel-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.cancel-btn:hover {
+    background-color: #5a6268;
+}
+
+.submit-btn {
+    background-color: #a90000;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #8b0000;
+}
+
+.submit-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Committee List Section */
+.committee-list-section {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.committee-list-section h2 {
+    color: #495057;
+    font-size: 20px;
+    margin-bottom: 20px;
+    border-left: 4px solid #a90000;
+    padding-left: 15px;
+}
+
+/* Search and Filter Container */
+.search-filter-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: end;
+}
+
+.filter-group, .search-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-group {
+    flex: 1.5;
+    min-width: 250px;
+    position: relative;
+}
+
+.filter-group label, .search-group label {
+    font-weight: bold;
+    color: #495057;
+    font-size: 14px;
+}
+
+.filter-group select, .search-group input {
+    padding: 10px 12px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-group input {
+    padding-right: 35px; /* Make room for clear button */
+}
+
+.filter-group select:focus, .search-group input:focus {
+    outline: none;
+    border-color: #a90000;
+    box-shadow: 0 0 0 3px rgba(169, 0, 0, 0.1);
+}
+
+.clear-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.clear-btn:hover {
+    background: #495057;
+}
+
+/* Results Info */
+.results-info {
+    margin-bottom: 15px;
+    color: #6c757d;
+    font-size: 14px;
+    font-style: italic;
+    padding: 8px 0;
+}
+
+/* Committee Table Container */
+.committee-table-container {
+    overflow-x: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: white;
+}
+
+.committee-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    min-width: 700px;
+}
+
+.committee-table thead {
+    background-color: #a90000;
+    color: white;
+}
+
+.committee-table th {
+    padding: 15px 12px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 14px;
+    border-bottom: 2px solid #8b0000;
+}
+
+.committee-table tbody tr {
+    border-bottom: 1px solid #dee2e6;
+    transition: background-color 0.2s;
+}
+
+.committee-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.committee-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.committee-table td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+.student-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.student-id {
+    color: #666;
+    font-family: monospace;
+}
+
+.position {
+    text-align: center;
+}
+
+.position-badge {
+    background-color: #a90000;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.event-name {
+    color: #495057;
+    max-width: 200px;
+    word-wrap: break-word;
+}
+
+.actions {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.edit-btn, .delete-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    margin: 0 2px;
+}
+
+.edit-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #1e7e34;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.no-members {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 40px;
+    background: white;
+    border-radius: 10px;
+    border: 2px dashed #dee2e6;
+}
+
+.error-message {
+    text-align: center;
+    color: #dc3545;
+    font-style: italic;
+    padding: 40px;
+    background: #f8d7da;
+    border-radius: 10px;
+    border: 2px solid #f5c6cb;
+}
+
+/* Edit Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 20px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    color: #000;
+    background-color: #f5f5f5;
+    border-radius: 50%;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.readonly-field {
+    background-color: #f8f9fa !important;
+    cursor: not-allowed;
+    color: #6c757d;
+}
+
+.readonly-field:focus {
+    border-color: #dee2e6 !important;
+    box-shadow: none !important;
+}
+
+/* Validation Styles */
+.form-group input.error,
+.form-group select.error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .main-content {
+        margin-left: 220px;
+        margin-right: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+        margin-right: 0;
+        padding: 10px;
+    }
+    
+    .top-right-bar {
+        position: relative;
+        top: 0;
+        right: 0;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    
+    .committee-form {
+        padding: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .cancel-btn, .submit-btn {
+        width: 100%;
+    }
+    
+    .search-filter-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .filter-group, .search-group {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .committee-table-container {
+        margin: 0 -10px;
+        border-radius: 0;
+    }
+    
+    .committee-table {
+        font-size: 12px;
+        min-width: 600px;
+    }
+    
+    .committee-table th,
+    .committee-table td {
+        padding: 8px 6px;
+    }
+    
+    .event-name {
+        max-width: 120px;
+        font-size: 11px;
+    }
+    
+    .edit-btn, .delete-btn {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+    
+    .position-badge {
+        font-size: 9px;
+        padding: 2px 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .committee-table {
+        min-width: 500px;
+    }
+    
+    .actions {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .edit-btn, .delete-btn {
+        width: 100%;
+        margin: 0;
+    }
+    
+    .search-group input {
+        padding-right: 30px;
+    }
+}
