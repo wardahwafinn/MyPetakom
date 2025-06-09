@@ -18,120 +18,174 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="MyPetakom Register Event">
     <meta name="author" content="Wardah Wafin">
     <title>MyPetakom - Register New Event</title>
-    <link rel="stylesheet" href="style/event_registration.css">
-    <link rel="icon" type="image/png" href="images/petakom.png">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <link rel="icon" type="image/png" href="images/petakom.png">
+    
     <style>
-        /* Additional styles for PDF management */
-        .file-preview {
-            margin-top: 15px;
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            background: #f9f9f9;
-            display: none;
+        /* Custom styles to complement Bootstrap */
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-image: url("images/bg.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
         }
 
-        .file-preview.active {
+        /* Original Sidebar Design */
+        .sidebar {
+            width: 210px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: block;
+            width: 125px;
+            height: 125px;
+            margin: 0 auto 15px;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: white;
+            margin: 10px 0;
+        }
+
+        .nav-item {
+            display: block;
+            color: #333;
+            text-decoration: none;
+            padding: 10px 80px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .event-title {
+            color: #333;
+            padding: 10px 80px;
             display: block;
         }
 
-        .file-info {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .file-details {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .file-icon {
-            width: 32px;
-            height: 32px;
-            background: #dc3545;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-        }
-
-        .file-meta {
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        .file-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .action-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9em;
+        .submenu a {
+            display: block;
+            color: #333;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            transition: background-color 0.2s;
+            padding: 8px 55px 7px 55px;
+            font-size: 14px;
+            transition: background-color 0.3s;
         }
 
-        .view-btn {
-            background: #007bff;
-            color: white;
+        .submenu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
-        .view-btn:hover {
-            background: #0056b3;
+        /* Main content with original sidebar offset */
+        .main-content {
+            margin-left: 230px;
+            margin-right: 20px;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-y: auto;
         }
 
-        .edit-btn {
-            background: #28a745;
-            color: white;
+        /* Custom form styling */
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
-        .edit-btn:hover {
-            background: #1e7e34;
+        /* Map container */
+        .map-container {
+            height: 400px;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
-        .delete-btn {
-            background: #dc3545;
-            color: white;
+        /* File upload area */
+        .file-upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #f8f9fa;
         }
 
-        .delete-btn:hover {
-            background: #c82333;
+        .file-upload-area:hover {
+            border-color: #a90000;
+            background-color: #fff;
         }
 
-        .replace-btn {
-            background: #ffc107;
-            color: #212529;
+        .file-upload-area.has-file {
+            border-color: #28a745;
+            background-color: #f8fff9;
         }
 
-        .replace-btn:hover {
-            background: #e0a800;
+        .upload-success-text {
+            color: #28a745;
+            font-weight: 500;
         }
 
-        /* PDF Viewer Modal */
+        /* Custom brand colors */
+        .btn-primary {
+            background-color: #a90000;
+            border-color: #a90000;
+        }
+
+        .btn-primary:hover {
+            background-color: #8b0000;
+            border-color: #8b0000;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .text-primary {
+            color: #a90000 !important;
+        }
+
+        .border-primary {
+            border-color: #a90000 !important;
+        }
+
+        /* PDF Modal custom styles */
         .pdf-modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 1050;
             left: 0;
             top: 0;
             width: 100%;
@@ -153,78 +207,75 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
             overflow: hidden;
         }
 
-        .pdf-modal-header {
-            padding: 15px 20px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #dee2e6;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-        }
-
-        .close-modal:hover {
-            color: #000;
-        }
-
         .pdf-viewer {
             width: 100%;
             height: calc(100% - 60px);
             border: none;
         }
 
-        /* File size formatting */
-        .file-size {
-            color: #888;
-            font-size: 0.8em;
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .main-content {
+                margin-left: 220px;
+                margin-right: 10px;
+            }
         }
 
-        /* Upload area states */
-        .file-upload-area.has-file {
-            border-color: #28a745;
-            background-color: #f8fff9;
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                margin-right: 0;
+                padding: 10px;
+            }
         }
 
-        .upload-success-text {
-            color: #28a745;
-            font-weight: 500;
+        /* Form section headers */
+        .section-header {
+            border-left: 4px solid #a90000;
+            padding-left: 15px;
+            margin-bottom: 1.5rem;
         }
 
-        /* Update button styling for edit mode */
-        .submit-btn[data-editing="true"] {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            border-color: #28a745;
+        /* Custom file preview styles */
+        .file-preview {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f9f9f9;
         }
 
-        .submit-btn[data-editing="true"]:hover {
-            background: linear-gradient(135deg, #218838, #1aa085);
-            border-color: #1e7e34;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+        .file-preview.active {
+            display: block;
         }
 
-        /* Readonly input styling */
-        input[readonly] {
-            background-color: #f8f9fa !important;
-            cursor: not-allowed !important;
-            color: #6c757d;
-        }
-
-        input[readonly]:focus {
-            border-color: #ced4da;
-            box-shadow: none;
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            background: #dc3545;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
         }
     </style>
 </head>
 
-<body class="background">
+<body>
+    <!-- Original Sidebar -->
     <div class="sidebar">
         <a href="advisor_dash.php"><img src="images/petakom.png" alt="PETAKOM Logo" class="logo"></a>
         <hr>
@@ -241,135 +292,201 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
         </div>
     </div>
 
+    <!-- Main Content -->
     <div class="main-content">
-        <h1>Register New Event</h1>
-        
-        <form id="eventForm" class="event-form">
-            <div class="form-section">
-                <h2>Event Details</h2>
-                
-                <div class="form-group">
-                    <label for="eventID">Event ID *</label>
-                    <input type="text" id="eventID" name="eventID" maxlength="10" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="eventName">Event Name *</label>
-                    <input type="text" id="eventName" name="eventName" maxlength="100" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="eventDescription">Event Description</label>
-                    <textarea id="eventDescription" name="eventDescription" rows="4" maxlength="200"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="startDate">Start Date *</label>
-                    <input type="date" id="startDate" name="startDate" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="endDate">End Date *</label>
-                    <input type="date" id="endDate" name="endDate" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="eventLevel">Event Level *</label>
-                    <select id="eventLevel" name="eventLevel" required>
-                        <option value="">Select Event Level</option>
-                        <option value="international">International</option>
-                        <option value="national">National</option>
-                        <option value="state">State</option>
-                        <option value="district">District</option>
-                        <option value="umpsa">UMPSA</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h2>Location Details</h2>
-                
-                <div class="form-group">
-                    <label for="locationName">Location Name *</label>
-                    <input type="text" id="locationName" name="locationName" placeholder="e.g., Main Hall, UMPSA" maxlength="100" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Geolocation (Pin the exact location on the map)</label>
-                    <div id="map" class="map-container"></div>
-                    <input type="hidden" id="latitude" name="latitude">
-                    <input type="hidden" id="longitude" name="longitude">
-                    <div class="coordinates-display">
-                        <span id="coordinatesText">Click on the map to set location</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h2>Documents</h2>
-                
-                <div class="form-group">
-                    <label for="approvalLetter">Approval Letter (PDF)</label>
-                    <div class="file-upload-area" id="approvalUploadArea">
-                        <div class="upload-icon"><img src="images/cloud.png" alt="Upload"></div>
-                        <div class="upload-text">Click to upload or drag and drop</div>
-                        <div class="upload-subtext">PDF only, max 5MB</div>
-                        <input type="file" id="approvalLetter" name="approvalLetter" accept=".pdf" style="display: none;">
-                    </div>
-                    
-                    <!-- File Preview Section -->
-                    <div id="filePreview" class="file-preview">
-                        <div class="file-info">
-                            <div class="file-details">
-                                <div class="file-icon">PDF</div>
-                                <div>
-                                    <div id="fileName" class="file-name"></div>
-                                    <div id="fileSize" class="file-size"></div>
-                                </div>
-                            </div>
-                            <div class="file-actions">
-                                <button type="button" class="action-btn view-btn" id="viewBtn">
-                                    View
-                                </button>
-                                <button type="button" class="action-btn replace-btn" id="replaceBtn">
-                                    Replace
-                                </button>
-                                <button type="button" class="action-btn delete-btn" id="deleteBtn">
-                                    Delete
-                                </button>
-                            </div>
+        <div class="container-fluid p-4">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card form-container">
+                        <div class="card-body text-center">
+                            <h1 class="display-6 text-primary mb-0">Register New Event</h1>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="form-section">
-                <h2>Merit Application</h2>
-                <div class="form-group">
-                    <label for="applyMerit" class="simple-checkbox-label">
-                        <input type="checkbox" id="applyMerit" name="applyMerit" class="simple-checkbox">
-                        Apply for Merit for this event
-                    </label>
+            <!-- Event Form -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card form-container">
+                        <div class="card-body p-4">
+                            <form id="eventForm">
+                                <!-- Event Details Section -->
+                                <div class="mb-5">
+                                    <h3 class="section-header text-secondary">
+                                        <i class="bi bi-info-circle me-2"></i>Event Details
+                                    </h3>
+                                    
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label for="eventID" class="form-label fw-semibold">
+                                                Event ID <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="eventID" name="eventID" maxlength="10" required>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <label for="eventLevel" class="form-label fw-semibold">
+                                                Event Level <span class="text-danger">*</span>
+                                            </label>
+                                            <select class="form-select" id="eventLevel" name="eventLevel" required>
+                                                <option value="">Select Event Level</option>
+                                                <option value="international">International</option>
+                                                <option value="national">National</option>
+                                                <option value="state">State</option>
+                                                <option value="district">District</option>
+                                                <option value="umpsa">UMPSA</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="col-12">
+                                            <label for="eventName" class="form-label fw-semibold">
+                                                Event Name <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="eventName" name="eventName" maxlength="100" required>
+                                        </div>
+                                        
+                                        <div class="col-12">
+                                            <label for="eventDescription" class="form-label fw-semibold">Event Description</label>
+                                            <textarea class="form-control" id="eventDescription" name="eventDescription" rows="4" maxlength="200"></textarea>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <label for="startDate" class="form-label fw-semibold">
+                                                Start Date <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="date" class="form-control" id="startDate" name="startDate" required>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <label for="endDate" class="form-label fw-semibold">
+                                                End Date <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="date" class="form-control" id="endDate" name="endDate" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Location Details Section -->
+                                <div class="mb-5">
+                                    <h3 class="section-header text-secondary">
+                                        <i class="bi bi-geo-alt me-2"></i>Location Details
+                                    </h3>
+                                    
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <label for="locationName" class="form-label fw-semibold">
+                                                Location Name <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="locationName" name="locationName" 
+                                                   placeholder="e.g., Main Hall, UMPSA" maxlength="100" required>
+                                        </div>
+                                        
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold">Geolocation (Pin the exact location on the map)</label>
+                                            <div id="map" class="map-container border"></div>
+                                            <input type="hidden" id="latitude" name="latitude">
+                                            <input type="hidden" id="longitude" name="longitude">
+                                            <div class="mt-2 p-2 bg-light rounded">
+                                                <small class="text-muted" id="coordinatesText">
+                                                    <i class="bi bi-cursor me-1"></i>Click on the map to set location
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Documents Section -->
+                                <div class="mb-5">
+                                    <h3 class="section-header text-secondary">
+                                        <i class="bi bi-file-earmark-pdf me-2"></i>Documents
+                                    </h3>
+                                    
+                                    <div class="col-12">
+                                        <label for="approvalLetter" class="form-label fw-semibold">Approval Letter (PDF)</label>
+                                        
+                                        <div class="file-upload-area" id="approvalUploadArea">
+                                            <div class="upload-icon mb-3">
+                                                <i class="bi bi-cloud-upload display-3 text-muted"></i>
+                                            </div>
+                                            <div class="upload-text fs-5 fw-semibold">Click to upload or drag and drop</div>
+                                            <div class="upload-subtext text-muted">PDF only, max 5MB</div>
+                                            <input type="file" id="approvalLetter" name="approvalLetter" accept=".pdf" style="display: none;">
+                                        </div>
+                                        
+                                        <!-- File Preview Section -->
+                                        <div id="filePreview" class="file-preview">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="file-icon me-3">PDF</div>
+                                                    <div>
+                                                        <div id="fileName" class="fw-semibold"></div>
+                                                        <div id="fileSize" class="text-muted small"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-sm btn-primary" id="viewBtn">
+                                                        <i class="bi bi-eye me-1"></i>View
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-warning" id="replaceBtn">
+                                                        <i class="bi bi-arrow-repeat me-1"></i>Replace
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-danger" id="deleteBtn">
+                                                        <i class="bi bi-trash me-1"></i>Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Merit Application Section -->
+                                <div class="mb-5">
+                                    <h3 class="section-header text-secondary">
+                                        <i class="bi bi-award me-2"></i>Merit Application
+                                    </h3>
+                                    
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="applyMerit" name="applyMerit">
+                                        <label class="form-check-label fw-semibold" for="applyMerit">
+                                            Apply for Merit for this event
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Form Actions -->
+                                <div class="d-flex justify-content-end gap-3 pt-4 border-top">
+                                    <button type="button" class="btn btn-secondary px-4" onclick="window.location.href='advisor_dash.php'">
+                                        <i class="bi bi-x-circle me-2"></i>Cancel
+                                    </button>
+                                    <button type="submit" class="btn btn-primary px-4">
+                                        <i class="bi bi-check-circle me-2"></i>SUBMIT
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="form-actions">
-                <button type="button" class="cancel-btn" onclick="window.location.href='advisor_dash.php'">Cancel</button>
-                <button type="submit" class="submit-btn">SUBMIT</button>
-            </div>
-        </form>
+        </div>
     </div>
 
     <!-- PDF Viewer Modal -->
     <div id="pdfModal" class="pdf-modal">
         <div class="pdf-modal-content">
-            <div class="pdf-modal-header">
-                <h3 id="modalTitle">Approval Letter</h3>
-                <button class="close-modal" id="closeModal">&times;</button>
+            <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                <h5 id="modalTitle" class="mb-0">Approval Letter</h5>
+                <button class="btn-close" id="closeModal" aria-label="Close"></button>
             </div>
             <iframe id="pdfViewer" class="pdf-viewer"></iframe>
         </div>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
         let map;
@@ -383,7 +500,6 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
         document.addEventListener('DOMContentLoaded', function() {
             initializeMap();
             setupFileUpload();
-            setupMeritToggle();
             setupFormValidation();
             setupPDFViewer();
             
@@ -448,8 +564,8 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
             selectedLocation = latlng;
             document.getElementById('latitude').value = latlng.lat.toFixed(6);
             document.getElementById('longitude').value = latlng.lng.toFixed(6);
-            document.getElementById('coordinatesText').textContent = 
-                `Coordinates: ${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}`;
+            document.getElementById('coordinatesText').innerHTML = 
+                `<i class="bi bi-geo-alt me-1"></i>Coordinates: ${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}`;
 
             // Add drag listener to marker
             marker.on('dragend', function(e) {
@@ -457,8 +573,8 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
                 selectedLocation = newLatLng;
                 document.getElementById('latitude').value = newLatLng.lat.toFixed(6);
                 document.getElementById('longitude').value = newLatLng.lng.toFixed(6);
-                document.getElementById('coordinatesText').textContent = 
-                    `Coordinates: ${newLatLng.lat.toFixed(6)}, ${newLatLng.lng.toFixed(6)}`;
+                document.getElementById('coordinatesText').innerHTML = 
+                    `<i class="bi bi-geo-alt me-1"></i>Coordinates: ${newLatLng.lat.toFixed(6)}, ${newLatLng.lng.toFixed(6)}`;
             });
 
             // Add popup to marker
@@ -481,16 +597,16 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
             // Drag and drop
             uploadArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                uploadArea.style.backgroundColor = '#f0f0f0';
+                uploadArea.classList.add('border-primary');
             });
 
             uploadArea.addEventListener('dragleave', () => {
-                uploadArea.style.backgroundColor = '';
+                uploadArea.classList.remove('border-primary');
             });
 
             uploadArea.addEventListener('drop', (e) => {
                 e.preventDefault();
-                uploadArea.style.backgroundColor = '';
+                uploadArea.classList.remove('border-primary');
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
                     handleFileUpload(files[0]);
@@ -513,11 +629,11 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
         // Handle file upload
         function handleFileUpload(file) {
             if (file.type !== 'application/pdf') {
-                alert('Please upload only PDF files');
+                showAlert('Please upload only PDF files', 'warning');
                 return;
             }
             if (file.size > 5 * 1024 * 1024) {
-                alert('File size must be less than 5MB');
+                showAlert('File size must be less than 5MB', 'warning');
                 return;
             }
 
@@ -532,7 +648,7 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
             
             // Update upload area text
             const uploadText = document.querySelector('.upload-text');
-            uploadText.textContent = 'File uploaded successfully!';
+            uploadText.innerHTML = '<i class="bi bi-check-circle me-2"></i>File uploaded successfully!';
             uploadText.classList.add('upload-success-text');
         }
 
@@ -548,7 +664,7 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
         // View PDF
         function viewPDF() {
             if (!currentFileBlob) {
-                alert('No PDF file to view');
+                showAlert('No PDF file to view', 'warning');
                 return;
             }
             
@@ -577,7 +693,7 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
                 
                 // Reset upload area text
                 const uploadText = document.querySelector('.upload-text');
-                uploadText.textContent = 'Click to upload or drag and drop';
+                uploadText.innerHTML = 'Click to upload or drag and drop';
                 uploadText.classList.remove('upload-success-text');
             }
         }
@@ -609,11 +725,6 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
             });
         }
 
-        // Setup merit toggle
-        function setupMeritToggle() {
-            // Merit toggle functionality removed - now just a simple checkbox
-        }
-
         // Setup form validation
         function setupFormValidation() {
             const form = document.getElementById('eventForm');
@@ -635,15 +746,16 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
             requiredFields.forEach(fieldId => {
                 const field = document.getElementById(fieldId);
                 if (!field.value.trim()) {
-                    field.style.borderColor = '#dc3545';
+                    field.classList.add('is-invalid');
                     isValid = false;
                 } else {
-                    field.style.borderColor = '';
+                    field.classList.remove('is-invalid');
+                    field.classList.add('is-valid');
                 }
             });
 
             if (!selectedLocation) {
-                alert('Please select a location on the map');
+                showAlert('Please select a location on the map', 'warning');
                 isValid = false;
             }
 
@@ -654,8 +766,8 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
                 today.setHours(0, 0, 0, 0);
                 
                 if (startDate < today) {
-                    alert('Start date cannot be in the past');
-                    document.getElementById('startDate').style.borderColor = '#dc3545';
+                    showAlert('Start date cannot be in the past', 'warning');
+                    document.getElementById('startDate').classList.add('is-invalid');
                     isValid = false;
                 }
             }
@@ -665,8 +777,8 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
             const endDate = new Date(document.getElementById('endDate').value);
             
             if (endDate < startDate) {
-                alert('End date cannot be before start date');
-                document.getElementById('endDate').style.borderColor = '#dc3545';
+                showAlert('End date cannot be before start date', 'warning');
+                document.getElementById('endDate').classList.add('is-invalid');
                 isValid = false;
             }
 
@@ -687,12 +799,12 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
             }
 
             // Show loading with appropriate text
-            const submitBtn = document.querySelector('.submit-btn');
-            const originalText = submitBtn.textContent;
+            const submitBtn = document.querySelector('button[type="submit"]');
+            const originalContent = submitBtn.innerHTML;
             const loadingText = isEditMode ? 'Updating...' : 'Submitting...';
             const successMessage = isEditMode ? 'Event updated successfully!' : 'Event registered successfully!';
             
-            submitBtn.textContent = loadingText;
+            submitBtn.innerHTML = `<div class="spinner-border spinner-border-sm me-2" role="status"></div>${loadingText}`;
             submitBtn.disabled = true;
 
             fetch('api/save_event.php', {
@@ -702,26 +814,48 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert(successMessage);
-                    window.location.href = 'advisor_dash.php';
+                    showAlert(successMessage, 'success');
+                    setTimeout(() => {
+                        window.location.href = 'advisor_dash.php';
+                    }, 1500);
                 } else {
-                    alert('Error: ' + data.message);
+                    showAlert('Error: ' + data.message, 'danger');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
                 const errorMessage = isEditMode ? 'An error occurred while updating the event' : 'An error occurred while saving the event';
-                alert(errorMessage);
+                showAlert(errorMessage, 'danger');
             })
             .finally(() => {
-                submitBtn.textContent = originalText;
+                submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
             });
         }
 
+        // Show Bootstrap alert
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                if (alertDiv && alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 5000);
+        }
+
         // Load event for editing
         function loadEventForEdit(eventId) {
-            isEditMode = true; // Set edit mode flag
+            isEditMode = true;
             
             fetch(`api/get_event.php?id=${eventId}`)
                 .then(response => response.json())
@@ -731,23 +865,24 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
                         
                         // Update page title and submit button for edit mode
                         document.querySelector('h1').textContent = 'Edit Event';
-                        const submitBtn = document.querySelector('.submit-btn');
-                        submitBtn.textContent = 'UPDATE';
-                        submitBtn.setAttribute('data-editing', 'true');
+                        const submitBtn = document.querySelector('button[type="submit"]');
+                        submitBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>UPDATE';
+                        submitBtn.classList.remove('btn-primary');
+                        submitBtn.classList.add('btn-success');
                         
                         // Make eventID field readonly during editing
-                        document.getElementById('eventID').readOnly = true;
-                        document.getElementById('eventID').style.backgroundColor = '#f8f9fa';
-                        document.getElementById('eventID').style.cursor = 'not-allowed';
+                        const eventIdField = document.getElementById('eventID');
+                        eventIdField.readOnly = true;
+                        eventIdField.classList.add('bg-light');
                         
                     } else {
-                        alert('Error loading event: ' + data.message);
+                        showAlert('Error loading event: ' + data.message, 'danger');
                         window.location.href = 'advisor_dash.php';
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Error loading event');
+                    showAlert('Error loading event', 'danger');
                 });
         }
 
@@ -795,7 +930,7 @@ if (!isset($_SESSION['userType']) || ($_SESSION['userType'] != 'advisor' && $_SE
                     document.getElementById('approvalUploadArea').classList.add('has-file');
                     
                     const uploadText = document.querySelector('.upload-text');
-                    uploadText.textContent = 'File loaded successfully!';
+                    uploadText.innerHTML = '<i class="bi bi-check-circle me-2"></i>File loaded successfully!';
                     uploadText.classList.add('upload-success-text');
                 })
                 .catch(error => {

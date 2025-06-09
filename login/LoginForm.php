@@ -18,7 +18,7 @@ if (isset($_SESSION['userID']) && isset($_SESSION['userType'])) {
     <meta name="description" content="login form for MyPetakom">
     <meta name="author" content="UMI MAISARAH BINTI MOHD AFENDI">
     <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="../styles/login.css">
+    <link rel="stylesheet" type="text/css" href="style/login.css">
 </head>
 <body>
     <div class="fk_images">

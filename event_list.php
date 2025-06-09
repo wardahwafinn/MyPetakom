@@ -33,16 +33,367 @@ if ($data === false) {
 $currentStaffID = $_SESSION['userID'];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="MyPetakom Event List">
     <meta name="author" content="Wardah Wafin">
     <title>MyPetakom - Event List</title>
-    <link rel="stylesheet" href="style/event_list.css">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
     <link rel="icon" type="image/png" href="images/petakom.png">
+    
+    <style>
+        /* Custom styles to complement Bootstrap */
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-image: url("images/bg.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        /* Original Sidebar Design */
+        .sidebar {
+            width: 210px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: block;
+            width: 125px;
+            height: 125px;
+            margin: 0 auto 15px;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: white;
+            margin: 10px 0;
+        }
+
+        .nav-item {
+            display: block;
+            color: #333;
+            text-decoration: none;
+            padding: 10px 80px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .event-title {
+            color: #333;
+            padding: 10px 80px;
+            display: block;
+        }
+
+        .submenu a {
+            display: block;
+            color: #333;
+            text-decoration: none;
+            padding: 8px 55px 7px 55px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .submenu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main content with original sidebar offset */
+        .main-content {
+            margin-left: 230px;
+            margin-right: 20px;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        /* Custom Bootstrap overrides */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: none;
+        }
+
+        /* Custom brand colors */
+        .btn-primary {
+            background-color: #a90000;
+            border-color: #a90000;
+        }
+
+        .btn-primary:hover {
+            background-color: #8b0000;
+            border-color: #8b0000;
+        }
+
+        .text-primary {
+            color: #a90000 !important;
+        }
+
+        .border-primary {
+            border-color: #a90000 !important;
+        }
+
+        /* Custom table styling */
+        .table-custom {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-custom thead {
+            background-color: #a90000;
+            color: white;
+        }
+
+        .table-custom thead th {
+            border-bottom: 2px solid #8b0000;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Status badges */
+        .status-badge, .merit-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+            border: 2px solid;
+            box-sizing: border-box;
+        }
+
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+
+        .status-upcoming {
+            background-color: #cce7ff;
+            color: #004085;
+            border-color: #b3d7ff;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
+        }
+
+        .status-completed {
+            background-color: #e2e3e5;
+            color: #495057;
+            border-color: #d6d8db;
+        }
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .status-postponed {
+            background-color: #f4cccc;
+            color: #0c5460;
+            border-color: #b8daff;
+        }
+
+        .status-unknown {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            border-color: #dee2e6;
+        }
+
+        .merit-not-applied {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            border-color: #dee2e6;
+        }
+
+        .merit-pending {
+            background-color: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
+        }
+
+        .merit-approved {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+
+        .merit-unknown {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            border-color: #dee2e6;
+        }
+
+        /* Search highlight */
+        .search-highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        /* Action buttons */
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.3s;
+            border: 1px solid #dee2e6;
+            background-color: #f8f9fa;
+            color: #495057;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-details:hover {
+            background-color: #17a2b8;
+            color: white;
+            border-color: #17a2b8;
+        }
+
+        .btn-edit:hover {
+            background-color: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .btn-delete:hover {
+            background-color: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .btn-qr:hover {
+            background-color: #6f42c1;
+            color: white;
+            border-color: #6f42c1;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .main-content {
+                margin-left: 220px;
+                margin-right: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                margin-right: 0;
+                padding: 10px;
+            }
+        }
+
+        /* Loading animation */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .action-btn:disabled .action-icon {
+            animation: spin 1s linear infinite;
+        }
+
+        /* QR Modal custom styles */
+        .qr-image {
+            max-width: 300px;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background: white;
+        }
+
+        .qr-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        /* Event ID and Name styling */
+        .event-id {
+            font-family: monospace;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .event-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .event-date {
+            color: #666;
+            font-family: monospace;
+        }
+
+        .event-location {
+            color: #495057;
+        }
+    </style>
 </head>
 
-<body class="background">
+<body>
+    <!-- Original Sidebar -->
     <div class="sidebar">
         <a href="advisor_dash.php"><img src="images/petakom.png" alt="PETAKOM Logo" class="logo"></a>
         <hr>
@@ -59,83 +410,134 @@ $currentStaffID = $_SESSION['userID'];
         </div>
     </div>
 
+    <!-- Main Content -->
     <div class="main-content">
-        <h1>Upcoming & Recent Events</h1>
-        
-        <div class="events-container">
-            <!-- Search Section -->
-            <div class="search-section">
-                <div class="search-container">
-                    <div class="search-input-group">
-                        <input type="text" id="searchInput" placeholder="Event ID/Name" class="search-input">
-                        <button type="button" id="searchBtn" class="search-btn">
-                            <span class="search-icon">🔍</span>
-                        </button>
-                    </div>
-                    <div class="search-info">
-                        <span id="searchResults" class="search-results"></span>
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h1 class="display-6 text-primary mb-0">
+                                <i class="bi bi-calendar-event me-3"></i>Upcoming & Recent Events
+                            </h1>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="events-table-wrapper">
-                <table class="events-table" id="eventsTable">
-                    <thead>
-                        <tr>
-                            <th>Event ID</th>
-                            <th>Event Name</th>
-                            <th>Date</th>
-                            <th>Location</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="eventsTableBody">
-                        <!-- Events will be loaded here via JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Pagination -->
-            <div class="pagination" id="pagination">
-                <!-- Pagination will be generated here -->
+            <!-- Main Events Card -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Search Section -->
+                            <div class="row mb-4">
+                                <div class="col-lg-6">
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-search"></i>
+                                        </span>
+                                        <input type="text" class="form-control" id="searchInput" 
+                                               placeholder="Search by Event ID or Name...">
+                                        <button class="btn btn-primary" type="button" id="searchBtn">
+                                            Search
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mt-2 mt-lg-0">
+                                        <small class="text-muted" id="searchResults"></small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Events Table -->
+                            <div class="table-responsive">
+                                <table class="table table-custom" id="eventsTable">
+                                    <thead>
+                                        <tr>
+                                            <th><i class="bi bi-hash me-1"></i>Event ID</th>
+                                            <th><i class="bi bi-calendar-event me-1"></i>Event Name</th>
+                                            <th><i class="bi bi-calendar3 me-1"></i>Date</th>
+                                            <th><i class="bi bi-geo-alt me-1"></i>Location</th>
+                                            <th><i class="bi bi-circle-fill me-1"></i>Status</th>
+                                            <th class="text-center"><i class="bi bi-gear me-1"></i>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="eventsTableBody">
+                                        <!-- Events will be loaded here via JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Pagination -->
+                            <div class="d-flex justify-content-center mt-4">
+                                <nav aria-label="Events pagination">
+                                    <ul class="pagination" id="pagination">
+                                        <!-- Pagination will be generated here -->
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Event Details Modal -->
-    <div id="eventDetailsModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Event Details</h3>
-                <button onclick="closeEventDetailsModal()" class="close-btn">&times;</button>
-            </div>
-            <div class="modal-body" id="eventDetailsBody">
-                <!-- Event details will be loaded here -->
-            </div>
-            <div class="modal-footer">
-                <button onclick="closeEventDetailsModal()" class="cancel-btn">Close</button>
+    <div class="modal fade" id="eventDetailsModal" tabindex="-1" aria-labelledby="eventDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventDetailsModalLabel">
+                        <i class="bi bi-info-circle me-2"></i>Event Details
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="eventDetailsBody">
+                    <!-- Event details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i>Close
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- QR Code Modal -->
-    <div id="qrCodeModal" class="modal-overlay">
-        <div class="modal-content qr-modal">
-            <div class="modal-header">
-                <h3>QR Code for Event</h3>
-                <button onclick="closeQRModal()" class="close-btn">&times;</button>
-            </div>
-            <div class="modal-body" id="qrCodeBody">
-                <!-- QR Code will be displayed here -->
-            </div>
-            <div class="modal-footer">
-                <button onclick="copyQRUrl()" class="action-btn copy-btn" id="copyUrlBtn" style="display: none;">Copy URL</button>
-                <button onclick="downloadQR()" class="action-btn download-btn" id="downloadQRBtn" style="display: none;">Download QR</button>
-                <button onclick="closeQRModal()" class="cancel-btn">Close</button>
+    <div class="modal fade" id="qrCodeModal" tabindex="-1" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrCodeModalLabel">
+                        <i class="bi bi-qr-code me-2"></i>QR Code for Event
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="qrCodeBody">
+                    <!-- QR Code will be displayed here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" id="copyUrlBtn" style="display: none;">
+                        <i class="bi bi-clipboard me-1"></i>Copy URL
+                    </button>
+                    <button type="button" class="btn btn-success" id="downloadQRBtn" style="display: none;">
+                        <i class="bi bi-download me-1"></i>Download QR
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i>Close
+                    </button>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         let currentPage = 1;
@@ -144,7 +546,15 @@ $currentStaffID = $_SESSION['userID'];
         let currentSearchTerm = '';
         const eventsPerPage = 10;
 
+        // Bootstrap modal instances
+        let eventDetailsModal;
+        let qrCodeModal;
+
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Bootstrap modals
+            eventDetailsModal = new bootstrap.Modal(document.getElementById('eventDetailsModal'));
+            qrCodeModal = new bootstrap.Modal(document.getElementById('qrCodeModal'));
+            
             loadEvents();
             setupSearch();
         });
@@ -152,7 +562,6 @@ $currentStaffID = $_SESSION['userID'];
         function setupSearch() {
             const searchInput = document.getElementById('searchInput');
             const searchBtn = document.getElementById('searchBtn');
-            const clearBtn = document.getElementById('clearBtn');
 
             // Search on button click
             searchBtn.addEventListener('click', performSearch);
@@ -171,20 +580,6 @@ $currentStaffID = $_SESSION['userID'];
                 searchTimeout = setTimeout(() => {
                     performSearch();
                 }, 500); // Wait 500ms after user stops typing
-            });
-
-            // Clear search
-            clearBtn.addEventListener('click', function() {
-                searchInput.value = '';
-                currentSearchTerm = '';
-                currentPage = 1;
-                loadEvents();
-                updateSearchResults('');
-            });
-
-            // Show/hide clear button
-            searchInput.addEventListener('input', function() {
-                clearBtn.style.display = this.value.trim() ? 'flex' : 'none';
             });
         }
 
@@ -220,7 +615,7 @@ $currentStaffID = $_SESSION['userID'];
                     updateSearchResults(currentSearchTerm, data.totalEvents, data.events.length);
                 } else {
                     document.getElementById('eventsTableBody').innerHTML = 
-                        '<tr><td colspan="6" class="no-events">No events found</td></tr>';
+                        '<tr><td colspan="6" class="text-center text-muted py-4"><i class="bi bi-inbox me-2"></i>No events found</td></tr>';
                     updatePagination(0, 1);
                     updateSearchResults(currentSearchTerm, 0, 0);
                 }
@@ -228,7 +623,7 @@ $currentStaffID = $_SESSION['userID'];
             .catch(error => {
                 console.error('Error loading events:', error);
                 document.getElementById('eventsTableBody').innerHTML = 
-                    '<tr><td colspan="6" class="error-message">Error loading events</td></tr>';
+                    '<tr><td colspan="6" class="text-center text-danger py-4"><i class="bi bi-exclamation-triangle me-2"></i>Error loading events</td></tr>';
                 updatePagination(0, 1);
             });
         }
@@ -237,14 +632,15 @@ $currentStaffID = $_SESSION['userID'];
             const resultsElement = document.getElementById('searchResults');
             
             if (!searchTerm) {
-                resultsElement.textContent = totalEvents > 0 ? `Showing ${currentEvents} of ${totalEvents} events` : '';
+                resultsElement.innerHTML = totalEvents > 0 ? 
+                    `<i class="bi bi-info-circle me-1"></i>Showing ${currentEvents} of ${totalEvents} events` : '';
             } else {
                 if (totalEvents === 0) {
-                    resultsElement.textContent = `No events found for "${searchTerm}"`;
-                    resultsElement.className = 'search-results no-results';
+                    resultsElement.innerHTML = `<i class="bi bi-search me-1"></i>No events found for "<strong>${searchTerm}</strong>"`;
+                    resultsElement.className = 'text-danger';
                 } else {
-                    resultsElement.textContent = `Found ${totalEvents} event${totalEvents !== 1 ? 's' : ''} for "${searchTerm}"`;
-                    resultsElement.className = 'search-results found-results';
+                    resultsElement.innerHTML = `<i class="bi bi-check-circle me-1"></i>Found ${totalEvents} event${totalEvents !== 1 ? 's' : ''} for "<strong>${searchTerm}</strong>"`;
+                    resultsElement.className = 'text-success';
                 }
             }
         }
@@ -254,9 +650,9 @@ $currentStaffID = $_SESSION['userID'];
             
             if (events.length === 0) {
                 const message = currentSearchTerm ? 
-                    `No events found matching "${currentSearchTerm}"` : 
-                    'No events found';
-                tbody.innerHTML = `<tr><td colspan="6" class="no-events">${message}</td></tr>`;
+                    `<i class="bi bi-search me-2"></i>No events found matching "${currentSearchTerm}"` : 
+                    '<i class="bi bi-inbox me-2"></i>No events found';
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">${message}</td></tr>`;
                 return;
             }
 
@@ -267,10 +663,9 @@ $currentStaffID = $_SESSION['userID'];
                 const status = getEventStatus(event.startdate, event.enddate, event.eventStatus);
                 const statusClass = getStatusClass(status);
                 
-                // Check QR code status
-                const hasQR = event.qrCodePath && event.qrCodePath !== '';
-                const qrIcon = hasQR ? '✅' : '📱';
-                const qrTitle = hasQR ? 'QR Code Generated - Click to View/Download' : 'Generate QR Code';
+                // QR button - always the same
+                const qrIcon = 'qr-code';
+                const qrTitle = 'QR Code';
                 
                 // Highlight search terms
                 const highlightedEventName = highlightSearchTerm(event.eventName, currentSearchTerm);
@@ -283,23 +678,23 @@ $currentStaffID = $_SESSION['userID'];
                         <td class="event-date">${formatDate(event.startdate)}</td>
                         <td class="event-location">${escapeHtml(event.eventLocation)}</td>
                         <td><span class="status-badge ${statusClass}">${status}</span></td>
-                        <td class="actions-cell">
-                            <div class="action-buttons">
-                                <button onclick="viewEventDetails('${event.eventID}')" class="action-btn details-btn" title="View Details">
-                                    <span class="action-icon">⋮</span>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <button onclick="viewEventDetails('${event.eventID}')" class="action-btn btn-details" title="View Details">
+                                    <i class="bi bi-eye"></i>
                                 </button>
                                 ${canEditEvent(event.eventStatus) ? `
-                                    <button onclick="editEvent('${event.eventID}')" class="action-btn edit-btn" title="Edit Event">
-                                        <span class="action-icon">✏️</span>
+                                    <button onclick="editEvent('${event.eventID}')" class="action-btn btn-edit" title="Edit Event">
+                                        <i class="bi bi-pencil"></i>
                                     </button>
                                 ` : ''}
                                 ${canDeleteEvent(event.eventStatus) ? `
-                                    <button onclick="deleteEvent('${event.eventID}')" class="action-btn delete-btn" title="Delete Event">
-                                        <span class="action-icon">🗑️</span>
+                                    <button onclick="deleteEvent('${event.eventID}')" class="action-btn btn-delete" title="Delete Event">
+                                        <i class="bi bi-trash"></i>
                                     </button>
                                 ` : ''}
-                                <button onclick="generateQR('${event.eventID}', '${escapeHtml(event.eventName)}')" class="action-btn qr-btn" title="${qrTitle}" data-event-id="${event.eventID}">
-                                    <span class="action-icon">${qrIcon}</span>
+                                <button onclick="generateQR('${event.eventID}', '${escapeHtml(event.eventName)}')" class="action-btn btn-qr" title="${qrTitle}" data-event-id="${event.eventID}">
+                                    <i class="bi bi-${qrIcon} action-icon"></i>
                                 </button>
                             </div>
                         </td>
@@ -437,10 +832,10 @@ $currentStaffID = $_SESSION['userID'];
 
         function updatePagination(totalPagesCount, currentPageNum) {
             totalPages = totalPagesCount;
-            const paginationDiv = document.getElementById('pagination');
+            const paginationUl = document.querySelector('#pagination');
             
             if (totalPages <= 1) {
-                paginationDiv.innerHTML = '';
+                paginationUl.innerHTML = '';
                 return;
             }
 
@@ -448,7 +843,13 @@ $currentStaffID = $_SESSION['userID'];
             
             // Previous button
             if (currentPageNum > 1) {
-                html += `<button onclick="loadEvents(${currentPageNum - 1})" class="page-btn prev-btn">&lt;</button>`;
+                html += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="loadEvents(${currentPageNum - 1}); return false;">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+                `;
             }
             
             // Page numbers (show max 5 pages around current page)
@@ -456,33 +857,51 @@ $currentStaffID = $_SESSION['userID'];
             const endPage = Math.min(totalPages, currentPageNum + 2);
             
             if (startPage > 1) {
-                html += `<button onclick="loadEvents(1)" class="page-btn">1</button>`;
+                html += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="loadEvents(1); return false;">1</a>
+                    </li>
+                `;
                 if (startPage > 2) {
-                    html += `<span class="page-ellipsis">...</span>`;
+                    html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
                 }
             }
             
             for (let i = startPage; i <= endPage; i++) {
                 if (i === currentPageNum) {
-                    html += `<button class="page-btn current-page">${i}</button>`;
+                    html += `<li class="page-item active"><span class="page-link">${i}</span></li>`;
                 } else {
-                    html += `<button onclick="loadEvents(${i})" class="page-btn">${i}</button>`;
+                    html += `
+                        <li class="page-item">
+                            <a class="page-link" href="#" onclick="loadEvents(${i}); return false;">${i}</a>
+                        </li>
+                    `;
                 }
             }
             
             if (endPage < totalPages) {
                 if (endPage < totalPages - 1) {
-                    html += `<span class="page-ellipsis">...</span>`;
+                    html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
                 }
-                html += `<button onclick="loadEvents(${totalPages})" class="page-btn">${totalPages}</button>`;
+                html += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="loadEvents(${totalPages}); return false;">${totalPages}</a>
+                    </li>
+                `;
             }
             
             // Next button
             if (currentPageNum < totalPages) {
-                html += `<button onclick="loadEvents(${currentPageNum + 1})" class="page-btn next-btn">&gt;</button>`;
+                html += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="loadEvents(${currentPageNum + 1}); return false;">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                `;
             }
             
-            paginationDiv.innerHTML = html;
+            paginationUl.innerHTML = html;
         }
 
         function viewEventDetails(eventID) {
@@ -492,17 +911,16 @@ $currentStaffID = $_SESSION['userID'];
                     if (data.success) {
                         showEventDetailsModal(data.event);
                     } else {
-                        alert('Error loading event details: ' + data.message);
+                        showAlert('Error loading event details: ' + data.message, 'danger');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Error loading event details');
+                    showAlert('Error loading event details', 'danger');
                 });
         }
 
         function showEventDetailsModal(event) {
-            const modal = document.getElementById('eventDetailsModal');
             const body = document.getElementById('eventDetailsBody');
             
             const status = getEventStatus(event.startdate, event.enddate, event.eventStatus);
@@ -511,57 +929,61 @@ $currentStaffID = $_SESSION['userID'];
             const meritClass = getMeritClass(meritStatus);
             
             body.innerHTML = `
-                <div class="event-details">
-                    <div class="detail-row">
-                        <label>Event ID:</label>
-                        <span>${escapeHtml(event.eventID)}</span>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Event ID:</label>
+                        <div class="form-control-plaintext">${escapeHtml(event.eventID)}</div>
                     </div>
-                    <div class="detail-row">
-                        <label>Event Name:</label>
-                        <span>${escapeHtml(event.eventName)}</span>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Event Level:</label>
+                        <div class="form-control-plaintext text-capitalize">${escapeHtml(event.eventLevel)}</div>
                     </div>
-                    <div class="detail-row">
-                        <label>Description:</label>
-                        <span>${escapeHtml(event.description || 'No description')}</span>
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Event Name:</label>
+                        <div class="form-control-plaintext">${escapeHtml(event.eventName)}</div>
                     </div>
-                    <div class="detail-row">
-                        <label>Start Date:</label>
-                        <span>${formatDate(event.startdate)}</span>
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Description:</label>
+                        <div class="form-control-plaintext">${escapeHtml(event.description || 'No description')}</div>
                     </div>
-                    <div class="detail-row">
-                        <label>End Date:</label>
-                        <span>${formatDate(event.enddate)}</span>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Start Date:</label>
+                        <div class="form-control-plaintext">${formatDate(event.startdate)}</div>
                     </div>
-                    <div class="detail-row">
-                        <label>Event Level:</label>
-                        <span>${escapeHtml(event.eventLevel)}</span>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">End Date:</label>
+                        <div class="form-control-plaintext">${formatDate(event.enddate)}</div>
                     </div>
-                    <div class="detail-row">
-                        <label>Location:</label>
-                        <span>${escapeHtml(event.eventLocation)}</span>
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Location:</label>
+                        <div class="form-control-plaintext">${escapeHtml(event.eventLocation)}</div>
                     </div>
-                    <div class="detail-row">
-                        <label>Status:</label>
-                        <span class="status-badge ${statusClass}">${status}</span>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Status:</label>
+                        <div class="form-control-plaintext">
+                            <span class="status-badge ${statusClass}">${status}</span>
+                        </div>
                     </div>
-                    <div class="detail-row">
-                        <label>Merit Status:</label>
-                        <span class="merit-badge ${meritClass}">${meritStatus}</span>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Merit Status:</label>
+                        <div class="form-control-plaintext">
+                            <span class="merit-badge ${meritClass}">${meritStatus}</span>
+                        </div>
                     </div>
                     ${event.approvalLetter ? `
-                    <div class="detail-row">
-                        <label>Approval Letter:</label>
-                        <a href="api/uploads/${event.approvalLetter}" target="_blank" class="file-link">View Document</a>
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Approval Letter:</label>
+                        <div class="form-control-plaintext">
+                            <a href="api/uploads/${event.approvalLetter}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-file-earmark-pdf me-1"></i>View Document
+                            </a>
+                        </div>
                     </div>
                     ` : ''}
                 </div>
             `;
             
-            modal.style.display = 'flex';
-        }
-
-        function closeEventDetailsModal() {
-            document.getElementById('eventDetailsModal').style.display = 'none';
+            eventDetailsModal.show();
         }
 
         function editEvent(eventID) {
@@ -580,15 +1002,15 @@ $currentStaffID = $_SESSION['userID'];
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Event deleted successfully!');
+                        showAlert('Event deleted successfully!', 'success');
                         loadEvents(currentPage);
                     } else {
-                        alert('Error: ' + data.message);
+                        showAlert('Error: ' + data.message, 'danger');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('An error occurred while deleting the event');
+                    showAlert('An error occurred while deleting the event', 'danger');
                 });
             }
         }
@@ -599,8 +1021,8 @@ $currentStaffID = $_SESSION['userID'];
             if (!button) return;
 
             // Show loading state
-            const originalIcon = button.querySelector('.action-icon').textContent;
-            button.querySelector('.action-icon').textContent = '⏳';
+            const originalIcon = button.querySelector('.action-icon').className;
+            button.querySelector('.action-icon').className = 'bi bi-hourglass-split';
             button.disabled = true;
 
             fetch(`api/generate_qr.php?eventID=${encodeURIComponent(eventID)}`)
@@ -612,60 +1034,63 @@ $currentStaffID = $_SESSION['userID'];
                         currentQRData = data;
                         showQRModal(data);
                         
-                        // Update the button icon to show QR is generated
-                        button.querySelector('.action-icon').textContent = '✅';
-                        button.title = 'QR Code Generated - Click to View/Download';
-                        
                         // Show success message
                         if (!data.isExisting) {
-                            showNotification('QR Code generated successfully!', 'success');
+                            showAlert('QR Code generated successfully!', 'success');
                         }
                     } else {
                         console.error('QR Generation Failed:', data.message);
-                        alert('Error generating QR code: ' + data.message);
-                        
-                        // Restore original icon
-                        button.querySelector('.action-icon').textContent = originalIcon;
+                        showAlert('Error generating QR code: ' + data.message, 'danger');
                     }
                 })
                 .catch(error => {
                     console.error('QR Generation Error:', error);
-                    alert('An error occurred while generating the QR code');
-                    
-                    // Restore original icon
-                    button.querySelector('.action-icon').textContent = originalIcon;
+                    showAlert('An error occurred while generating the QR code', 'danger');
                 })
                 .finally(() => {
+                    // Always restore original QR icon
+                    button.querySelector('.action-icon').className = originalIcon;
                     button.disabled = false;
                 });
         }
 
         function showQRModal(qrData) {
-            const modal = document.getElementById('qrCodeModal');
             const body = document.getElementById('qrCodeBody');
             const downloadBtn = document.getElementById('downloadQRBtn');
             const copyBtn = document.getElementById('copyUrlBtn');
             
             // Update modal header
-            const headerTitle = modal.querySelector('.modal-header h3');
-            headerTitle.textContent = `QR Code for ${qrData.eventName}`;
+            const headerTitle = document.querySelector('#qrCodeModalLabel');
+            headerTitle.innerHTML = `<i class="bi bi-qr-code me-2"></i>QR Code for ${qrData.eventName}`;
             
             // Generate QR image URL
             const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&format=png&margin=10&data=${encodeURIComponent(qrData.qrUrl)}`;
             
             body.innerHTML = `
-                <div class="qr-info">
-                    <div class="qr-details">
-                        <h4>${escapeHtml(qrData.eventName)}</h4>
-                        <p><strong>Event ID:</strong> ${escapeHtml(qrData.eventID)}</p>
-                        <p><strong>QR URL:</strong> <a href="${qrData.qrUrl}" target="_blank" class="qr-url-link">${qrData.qrUrl}</a></p>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">
+                                <i class="bi bi-info-circle me-2"></i>${escapeHtml(qrData.eventName)}
+                            </h5>
+                            <hr>
+                            <p class="mb-1"><strong>Event ID:</strong> ${escapeHtml(qrData.eventID)}</p>
+                            <p class="mb-0"><strong>QR URL:</strong> 
+                                <a href="${qrData.qrUrl}" target="_blank" class="text-break">${qrData.qrUrl}</a>
+                            </p>
+                        </div>
                     </div>
                     
-                    <div class="qr-code-display">
-                        <div class="qr-image-container">
-                            <img src="${qrImageUrl}" alt="QR Code for ${escapeHtml(qrData.eventName)}" class="qr-image" onload="onQRImageLoad()" onerror="onQRImageError()">
-                            <div class="qr-loading" id="qrLoading">
-                                <p>🔄 Loading QR Code...</p>
+                    <div class="col-md-4">
+                        <div class="text-center p-3 bg-light rounded">
+                            <div class="position-relative d-inline-block">
+                                <img src="${qrImageUrl}" alt="QR Code for ${escapeHtml(qrData.eventName)}" 
+                                     class="qr-image" onload="onQRImageLoad()" onerror="onQRImageError()">
+                                <div class="qr-loading position-absolute top-50 start-50 translate-middle" id="qrLoading">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -679,7 +1104,7 @@ $currentStaffID = $_SESSION['userID'];
             downloadBtn.style.display = 'inline-block';
             copyBtn.style.display = 'inline-block';
             
-            modal.style.display = 'flex';
+            qrCodeModal.show();
         }
 
         function onQRImageLoad() {
@@ -692,7 +1117,7 @@ $currentStaffID = $_SESSION['userID'];
         function onQRImageError() {
             const loading = document.getElementById('qrLoading');
             if (loading) {
-                loading.innerHTML = '<p>❌ Failed to load QR Code image</p>';
+                loading.innerHTML = '<div class="text-danger"><i class="bi bi-exclamation-triangle"></i> Failed to load</div>';
             }
         }
 
@@ -709,16 +1134,16 @@ $currentStaffID = $_SESSION['userID'];
                 link.click();
                 document.body.removeChild(link);
                 
-                showNotification('QR Code download started!', 'success');
+                showAlert('QR Code download started!', 'success');
             } else {
-                alert('No QR code available for download');
+                showAlert('No QR code available for download', 'warning');
             }
         }
 
         function copyQRUrl() {
             if (currentQRData && currentQRData.qrUrl) {
                 navigator.clipboard.writeText(currentQRData.qrUrl).then(() => {
-                    showNotification('QR URL copied to clipboard!', 'success');
+                    showAlert('QR URL copied to clipboard!', 'success');
                 }).catch(err => {
                     console.error('Failed to copy URL:', err);
                     // Fallback for older browsers
@@ -728,72 +1153,44 @@ $currentStaffID = $_SESSION['userID'];
                     textArea.select();
                     try {
                         document.execCommand('copy');
-                        showNotification('QR URL copied to clipboard!', 'success');
+                        showAlert('QR URL copied to clipboard!', 'success');
                     } catch (err) {
-                        alert('Failed to copy URL');
+                        showAlert('Failed to copy URL', 'danger');
                     }
                     document.body.removeChild(textArea);
                 });
             } else {
-                alert('No QR URL available to copy');
+                showAlert('No QR URL available to copy', 'warning');
             }
         }
 
-        function closeQRModal() {
-            document.getElementById('qrCodeModal').style.display = 'none';
-            currentQRData = null;
-        }
-
-        function showNotification(message, type = 'info') {
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.className = `notification notification-${type}`;
-            notification.textContent = message;
+        // Show Bootstrap alert
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `
+                <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
             
-            // Style the notification
-            Object.assign(notification.style, {
-                position: 'fixed',
-                top: '20px',
-                right: '20px',
-                padding: '12px 20px',
-                borderRadius: '6px',
-                color: 'white',
-                zIndex: '10000',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                backgroundColor: type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#007bff'
-            });
+            document.body.appendChild(alertDiv);
             
-            document.body.appendChild(notification);
-            
-            // Remove after 3 seconds
+            // Auto-dismiss after 4 seconds
             setTimeout(() => {
-                if (document.body.contains(notification)) {
-                    document.body.removeChild(notification);
+                if (alertDiv && alertDiv.parentNode) {
+                    const bsAlert = bootstrap.Alert.getInstance(alertDiv);
+                    if (bsAlert) bsAlert.close();
                 }
-            }, 3000);
+            }, 4000);
         }
 
-        // Close modals when clicking outside
-        document.getElementById('eventDetailsModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeEventDetailsModal();
-            }
-        });
-
-        document.getElementById('qrCodeModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeQRModal();
-            }
-        });
-
-        // Add keyboard support for closing modals
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeEventDetailsModal();
-                closeQRModal();
-            }
+        // Event handlers for modal cleanup
+        document.getElementById('qrCodeModal').addEventListener('hidden.bs.modal', function () {
+            currentQRData = null;
+            document.getElementById('downloadQRBtn').style.display = 'none';
+            document.getElementById('copyUrlBtn').style.display = 'none';
         });
     </script>
 </body>
