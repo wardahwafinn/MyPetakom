@@ -15,6 +15,15 @@ if ($conn->connect_error) {
 <!DOCTYPE html>
 <html>
 <head>
+
+ <meta name="description" content="add new user">
+    <meta name="author" content="UMI MAISARAH BINTI MOHD AFENDI">
+    <title>MyPetakom</title>
+    <link rel="stylesheet" type="text/css" href="style/admin_manage_profile.css">
+    <link rel="icon" type="image/png" href="images/petakom.png">
+    <meta charset="UTF-8">
+    <title>Student Page</title>
+
     <title>Add New User</title>
     <style>
         body {
@@ -24,7 +33,7 @@ if ($conn->connect_error) {
         }
         .form-container {
             background: #fff;
-            padding: 25px;
+            padding: 50px;
             border-radius: 12px;
             width: 450px;
             margin: auto;
@@ -55,7 +64,44 @@ if ($conn->connect_error) {
         }
     </style>
 </head>
-<body>
+
+<body class="background">
+
+    <div class="sidebar">
+        <li class="listyle"><a href="student.php"><img src="images/petakom.png" alt="PETAKOM Logo" class="logo"></a></li>
+        <hr>
+
+        <li class="listyle"><a href="staffProfile.php" class="nav-item">Profile</a></li>
+
+        <li class="listyle"><a class="active" href="admin_manage_profile.php" class="nav-item">Manage Profile</a>
+        </li>
+        <hr>
+
+        <li class="listyle"><a  href="admin.php" class="nav-item">Dashboard</a></li>
+        <hr>
+
+        <li class="listyle"><a href="adminMember.php" class="nav-item">Manage Membership</a></li>
+        <hr>
+
+        <li class="listyle"><a href="#" class="nav-item">View Event</a></li>
+        <hr>
+
+    </div>
+
+        <div class="h1text">
+        <h1>PROFILE MANAGEMENT</h1>
+    </div>
+    
+
+   <div class="top-right-bar">
+        <a href="staffProfile.php" class="profilename">
+            <img src="images/user.png" alt="User" class="profile-icon">HI, ADMIN
+        </a>
+        <a href="logout.php">
+            <img src="images/logout.png" alt="Logout Icon" class="logout-icon">
+        </a>
+    </div>
+
     <div class="form-container">
         <h2>Add New User</h2>
         <form method="post" action="insert_user.php">
@@ -65,22 +111,22 @@ if ($conn->connect_error) {
                 <option value="staff">Staff</option>
             </select>
 
-            <label>ID:</label>
+            <label>ID:</label><br>
             <input type="text" name="id" required>
-
-            <label>Name:</label>
+            <br>
+            <label>Name:</label><br>
             <input type="text" name="name" required>
-
-            <label>Email:</label>
+            <br>
+            <label>Email:</label><br>
             <input type="email" name="email" required>
-
-            <label>Password:</label>
+            <br>
+            <label>Password:</label><br>
             <input type="password" name="password" required>
-
-            <label>Card (STUDENT) or Role (ADMIN/STAFF):</label>
+            <br>
+            <label>Card Number (STUDENT) or Role (ADMIN/STAFF):</label><br>
             <input type="text" name="card_or_role" required>
-
-            <label>Phone Number (Only for Student):</label>
+            <br>
+            <label>Phone Number (Only for Student):</label><br>
             <input type="text" name="phone">
 
             <button type="submit">Add User</button>

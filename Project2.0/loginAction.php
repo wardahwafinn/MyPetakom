@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $userID = $_POST['userID'];
-    $password = md5($_POST['password']);  // Password should be hashed (same as in DB)
+    $entered_password = $_POST['password'];  // Keep original password for verification
     $userType = $_POST['userType'];
     
     $query = "";
@@ -27,19 +27,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Determine which table to query based on user type
     if ($userType == "student") {
-        $query = "SELECT * FROM student WHERE studentID = ? AND password = ?";
+        $query = "SELECT * FROM student WHERE studentID = ?";
+        $email_field = "studentEmail";
     } else {
         // For both admin and advisor (both in staff table)
-        $query = "SELECT * FROM staff WHERE staffID = ? AND staffPassword = ? AND staffRole = ?";
+        $query = "SELECT * FROM staff WHERE staffID = ? AND staffRole = ?";
+        $email_field = "staffEmail";
     }
     
     $stmt = $data->prepare($query);
     
     // Bind parameters differently based on user type
     if ($userType == "student") {
-        $stmt->bind_param("ss", $userID, $password);
+        $stmt->bind_param("s", $userID);
     } else {
-        $stmt->bind_param("sss", $userID, $password, $userType);
+        $stmt->bind_param("ss", $userID, $userType);
     }
 
     $stmt->execute();
@@ -47,26 +49,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $row = $result->fetch_assoc();
 
     if ($row) {
-        // Set session variables
-        $_SESSION['userID'] = $userID;
-        $_SESSION['userType'] = $userType;
-        $_SESSION['userEmail'] = $row[$email_field];
-
-        // Redirect based on userType
+        // Get the stored hashed password from database
+        $stored_password = "";
         if ($userType == "student") {
-            header("Location: student.php");
-            exit();
-        } else if ($userType == "admin") {
-            header("Location: admin.php");
-            exit();
-        } else if ($userType == "advisor") {
-            header("Location: advisor_dash.php");
+            $stored_password = $row['password'];
+        } else {
+            $stored_password = $row['staffPassword'];
+        }
+        
+        // Verify the entered password against the stored hash
+        if (password_verify($entered_password, $stored_password)) {
+            // Password is correct - set session variables
+            $_SESSION['userID'] = $userID;
+            $_SESSION['userType'] = $userType;
+            $_SESSION['userEmail'] = $row[$email_field];
+
+            // Redirect based on userType
+            if ($userType == "student") {
+                header("Location: student.php");
+                exit();
+            } else if ($userType == "admin") {
+                header("Location: admin.php");
+                exit();
+            } else if ($userType == "advisor") {
+                header("Location: advisor_dash.php");
+                exit();
+            }
+        } else {
+            // Password is incorrect
+            echo "<h1>Invalid ID or password</h1>";
+            echo "<p><a href='LoginForm.php'>Please log in again</a></p>";
             exit();
         }
     } else {
+        // User not found
         echo "<h1>Invalid ID or password</h1>";
         echo "<p><a href='LoginForm.php'>Please log in again</a></p>";
         exit();
     }
+    
+    $stmt->close();
 }
+
+mysqli_close($data);
 ?>

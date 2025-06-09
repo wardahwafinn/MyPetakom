@@ -29,13 +29,12 @@ if ($conn->connect_error) {
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="description" content="student Dashboard for myPetakom">
+    <meta name="description" content="Profile management for admin">
     <meta name="author" content="UMI MAISARAH BINTI MOHD AFENDI">
     <title>MyPetakom</title>
     <link rel="stylesheet" type="text/css" href="style/admin_manage_profile.css">
     <link rel="icon" type="image/png" href="images/petakom.png">
     <meta charset="UTF-8">
-    <title>Student Page</title>
 </head>
 
 <body class="background">
@@ -44,7 +43,7 @@ if ($conn->connect_error) {
         <li class="listyle"><a href="student.php"><img src="images/petakom.png" alt="PETAKOM Logo" class="logo"></a></li>
         <hr>
 
-        <li class="listyle"><a href="#" class="nav-item">Profile</a></li>
+        <li class="listyle"><a href="staffProfile.php" class="nav-item">Profile</a></li>
 
         <li class="listyle"><a class="active" href="admin_manage_profile.php" class="nav-item">Manage Profile</a>
         </li>
@@ -67,7 +66,7 @@ if ($conn->connect_error) {
     
 
    <div class="top-right-bar">
-        <a href="profile.html" class="profilename">
+        <a href="staffProfile.php" class="profilename">
             <img src="images/user.png" alt="User" class="profile-icon">HI, ADMIN
         </a>
         <a href="logout.php">
@@ -86,6 +85,8 @@ if ($conn->connect_error) {
 
   
         <hr>
+        <input type="text" id="userSearch" placeholder="Search by name, email, role..." style="margin-bottom: 15px; padding: 8px; width: 50%; border-radius: 6px; border: 1px solid #ccc;">
+
 
         <!-- User Table -->
         <table>
@@ -174,5 +175,19 @@ if (status) {
     showToast(message);
 }
 </script>
+
+<script>
+document.getElementById("userSearch").addEventListener("keyup", function () {
+    const search = this.value.toLowerCase();
+    const rows = document.querySelectorAll("table tbody tr");
+
+    rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(search) ? "" : "none";
+    });
+});
+</script>
+
+
 </body>
 </html>

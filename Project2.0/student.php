@@ -48,7 +48,7 @@ if (!isset($_SESSION['userID'])) {
     
 
    <div class="top-right-bar">
-        <a href="profile.html" class="profilename">
+        <a href="studProfile.php" class="profilename">
             <img src="images/user.png" alt="User" class="profile-icon">HI, STUDENT
         </a>
         <a href="logout.php">

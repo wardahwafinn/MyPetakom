@@ -13,27 +13,27 @@ if ($data === false) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
-// Check if user is logged in and is a student
-if (!isset($_SESSION['userID']) || !isset($_SESSION['userType']) || $_SESSION['userType'] !== 'student') {
+// Check if user is logged in and is a staff
+if (!isset($_SESSION['userID']) || !isset($_SESSION['userType']) || $_SESSION['userType'] !== 'admin') {
     header("Location: LoginForm.php");
     exit();
 }
 
-// Get student information from database
-$studentID = $_SESSION['userID'];
-$query = "SELECT * FROM student WHERE studentID = ?";
+// Get staff information from database
+$staffID = $_SESSION['userID'];
+$query = "SELECT * FROM staff WHERE staffID = ?";
 $stmt = $data->prepare($query);
-$stmt->bind_param("s", $studentID);
+$stmt->bind_param("s", $staffID);
 $stmt->execute();
 $result = $stmt->get_result();
-$student = $result->fetch_assoc();
+$staff = $result->fetch_assoc();
 $stmt->close();
 
 mysqli_close($data);
 
-// Check if student data exists
-if (!$student) {
-    echo "Student data not found.";
+// Check if staff data exists
+if (!$staff) {
+    echo "Staff data not found.";
     exit();
 }
 ?>
@@ -41,13 +41,13 @@ if (!$student) {
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="description" content="student Dashboard for myPetakom">
+    <meta name="description" content="Staff profile for myPetakom">
     <meta name="author" content="UMI MAISARAH BINTI MOHD AFENDI">
     <title>MyPetakom</title>
     <link rel="stylesheet" type="text/css" href="style/profile.css">
     <link rel="icon" type="image/png" href="images/petakom.png">
     <meta charset="UTF-8">
-    <title>Student Profile </title>
+    <title>Staff Profile </title>
 </head>
 <body class="background">
 
@@ -55,22 +55,24 @@ if (!$student) {
         <li class="listyle"><a href="student.php"><img src="images/petakom.png" alt="PETAKOM Logo" class="logo"></a></li>
         <hr>
 
-        <li class="listyle"><a class="active" href="studProfile.php" class="nav-item">Profile</a></li>
+        <li class="listyle"><a class="active" href="staffProfile.php" class="nav-item">Profile</a>
+        <a href="admin_manage_profile.php" class="nav-item">Manage Profile</a>
+        </li>
         <hr>
 
-        <li class="listyle"><a  href="student.php" class="nav-item">Dashboard</a></li>
+        <li class="listyle"><a  href="admin.php" class="nav-item">Dashboard</a></li>
         <hr>
 
-        <li class="listyle"><a href="studMembership.php" class="nav-item">Apply Membership</a></li>
+        <li class="listyle"><a href="adminMember.php" class="nav-item">Manage Membership</a></li>
         <hr>
 
-        <li class="listyle"><a href="studEvent.php" class="nav-item">View Event</a></li>
+        <li class="listyle"><a href="#" class="nav-item">View Event</a></li>
         <hr>
 
     </div>
     <div class="top-right-bar">
-        <a href="studProfile.php" class="profilename">
-            <img src="images/user.png" alt="User" class="profile-icon">HI, STUDENT
+        <a href="staffProfile.php" class="profilename">
+            <img src="images/user.png" alt="User" class="profile-icon">HI, STAFF
         </a>
         <a href="logout.php">
             <img src="images/logout.png" alt="Logout Icon" class="logout-icon">
@@ -79,8 +81,8 @@ if (!$student) {
         
         <div class="profile-content">
             <div class="welcome-msg">
-                <strong>Welcome, <?php echo htmlspecialchars($student['studentName']); ?>!</strong>
-                <br>You are logged in as: Student (ID: <?php echo htmlspecialchars($_SESSION['userID']); ?>)
+                <strong>Welcome, <?php echo htmlspecialchars($staff['staffName']); ?>!</strong>
+                <br>You are logged in as: Staff (ID: <?php echo htmlspecialchars($_SESSION['userID']); ?>)
             </div>
         </div>
         
@@ -90,18 +92,18 @@ if (!$student) {
             
             <div class="profile-info">
             <div class="info-group">
-                        <span class="info-label">Student ID</span>
-                        <div class="info-value"><?php echo htmlspecialchars($student['studentID']); ?></div>
+                        <span class="info-label">Staff ID</span>
+                        <div class="info-value"><?php echo htmlspecialchars($staff['staffID']); ?></div>
                 </div>
 
                 <div class="info-group">
                     <span class="info-label">Name</span>
-                    <div class="info-value"><?php echo htmlspecialchars($student['studentName']); ?></div>
+                    <div class="info-value"><?php echo htmlspecialchars($staff['staffName']); ?></div>
                 </div>
                 
                 <div class="info-group">
                     <span class="info-label">Email</span>
-                    <div class="info-value"><?php echo htmlspecialchars($student['studentEmail']); ?></div>
+                    <div class="info-value"><?php echo htmlspecialchars($staff['staffEmail']); ?></div>
                 </div>
                 
                 <div class="info-group">
@@ -110,13 +112,8 @@ if (!$student) {
                 </div>
                 
                 <div class="info-group">
-                    <span class="info-label">Card Number</span>
-                    <div class="info-value"><?php echo htmlspecialchars($student['studentCard']); ?></div>
-                </div>
-                
-                <div class="info-group">
-                    <span class="info-label">Phone Number</span>
-                    <div class="info-value"><?php echo htmlspecialchars($student['studentPhoneNum']); ?></div>
+                    <span class="info-label">Role</span>
+                    <div class="info-value"><?php echo htmlspecialchars($staff['staffRole']); ?></div>
                 </div>
             </div>
                 

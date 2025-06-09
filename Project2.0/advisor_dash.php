@@ -33,7 +33,7 @@ if (!isset($_SESSION['userID'])) {
         <a href="home.html" class="nav-item">Home</a>
         <hr>
 
-        <a href="profile.html" class="nav-item">Profile</a>
+        <a href="staffProfile.php" class="nav-item">Profile</a>
         <hr>
 
         <span class="nav-item event-title">Event</span>
