@@ -26,7 +26,7 @@ $result = $conn->query($sql);
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="description" content="membership management for admin">
+    <meta name="description" content="student Dashboard for myPetakom">
     <meta name="author" content="UMI MAISARAH BINTI MOHD AFENDI">
     <title>MyPetakom</title>
     <link rel="stylesheet" type="text/css" href="style/admin.css">
@@ -60,7 +60,7 @@ $result = $conn->query($sql);
     
 
    <div class="top-right-bar">
-        <a href="staffProfile.php" class="profilename">
+        <a href="profile.html" class="profilename">
             <img src="images/user.png" alt="User" class="profile-icon">HI, ADMIN
         </a>
         <a href="logout.php">
