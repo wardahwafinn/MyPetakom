@@ -55,7 +55,8 @@ if ($conn->connect_error) {
         <li class="listyle"><a href="adminMember.php" class="nav-item">Manage Membership</a></li>
         <hr>
 
-        <li class="listyle"><a href="#" class="nav-item">View Event</a></li>
+        <li class="listyle"><a href="admin_view_event.php" class="nav-item">View Event</a></li>
+        <li class="listyle"><a href="adminAttendanceDash.php" class="nav-item">>Attendance</a></li>
         <hr>
 
     </div>

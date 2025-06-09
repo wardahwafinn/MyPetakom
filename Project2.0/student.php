@@ -40,7 +40,7 @@ if (!isset($_SESSION['userID'])) {
         <li class="listyle"><a href="studMembership.php" class="nav-item">Apply Membership</a></li>
         <hr>
 
-        <li class="listyle"><a href="studEvent.php" class="nav-item">View Event</a></li>
+        <li class="listyle"><a href="student_view_events.php" class="nav-item">View Event</a></li>
         <hr>
 
     </div>

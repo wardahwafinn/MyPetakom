@@ -26,7 +26,7 @@ $result = $conn->query($sql);
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="description" content="membership management for admin">
+    <meta name="description" content="student Dashboard for myPetakom">
     <meta name="author" content="UMI MAISARAH BINTI MOHD AFENDI">
     <title>MyPetakom</title>
     <link rel="stylesheet" type="text/css" href="style/admin.css">
@@ -52,7 +52,8 @@ $result = $conn->query($sql);
         <li class="listyle"><a  class="active"  href="adminMember.php" class="nav-item">Manage Membership</a></li>
         <hr>
 
-        <li class="listyle"><a href="#" class="nav-item">View Event</a></li>
+        <li class="listyle"><a href="admin_view_event.php" class="nav-item">View Event</a></li>
+        <li class="listyle"><a href="adminAttendanceDash.php" class="nav-item">>Attendance</a></li>
         <hr>
 
     </div>
@@ -60,7 +61,7 @@ $result = $conn->query($sql);
     
 
    <div class="top-right-bar">
-        <a href="staffProfile.php" class="profilename">
+        <a href="profile.html" class="profilename">
             <img src="images/user.png" alt="User" class="profile-icon">HI, ADMIN
         </a>
         <a href="logout.php">

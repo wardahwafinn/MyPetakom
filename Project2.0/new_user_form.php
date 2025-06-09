@@ -68,22 +68,22 @@ if ($conn->connect_error) {
 <body class="background">
 
     <div class="sidebar">
-        <li class="listyle"><a href="student.php"><img src="images/petakom.png" alt="PETAKOM Logo" class="logo"></a></li>
+        <li class="listyle"><a href="admin.php"><img src="images/petakom.png" alt="PETAKOM Logo" class="logo"></a></li>
         <hr>
 
-        <li class="listyle"><a href="staffProfile.php" class="nav-item">Profile</a></li>
-
-        <li class="listyle"><a class="active" href="admin_manage_profile.php" class="nav-item">Manage Profile</a>
+        <li class="listyle"><a href="staffProfile.php" class="nav-item">Profile</a>
+        <a class="active" href="admin_manage_profile.php" class="nav-item">Manage Profile</a>
         </li>
         <hr>
 
-        <li class="listyle"><a  href="admin.php" class="nav-item">Dashboard</a></li>
+        <li class="listyle"><a href="admin.php" class="nav-item">Dashboard</a></li>
         <hr>
 
         <li class="listyle"><a href="adminMember.php" class="nav-item">Manage Membership</a></li>
         <hr>
 
-        <li class="listyle"><a href="#" class="nav-item">View Event</a></li>
+        <li class="listyle"><a href="admin_view_event.php" class="nav-item">View Event</a></li>
+        <a href="admin_manage_profile.php" class="nav-item">>Attendance</a>
         <hr>
 
     </div>
